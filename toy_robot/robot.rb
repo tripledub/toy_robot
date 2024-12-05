@@ -11,16 +11,10 @@ module ToyRobot
     end
 
     def move
-     case facing
-     when "EAST"
-       move_east
-     when "NORTH"
-       move_north
-     when "SOUTH"
-       move_south
-     when "WEST"
-       move_west
-     end
+      method_name = "move_#{facing.downcase}"
+      send(method_name)
+    rescue NoMethodError
+      "Invalid direction: #{facing}"
     end
 
     private

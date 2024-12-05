@@ -38,5 +38,15 @@ RSpec.describe ToyRobot::Robot do
         expect(subject.east).to eq(-1)
       end
     end
+
+    context "when facing an invalid direction" do
+      let(:facing) { "INVALID" }
+      it "does not move and returns an error message" do
+        result = subject.move
+        expect(result).to eq("Invalid direction: INVALID")
+        expect(subject.north).to eq(0)
+        expect(subject.east).to eq(0)
+      end
+    end
   end
 end
