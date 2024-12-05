@@ -14,10 +14,17 @@ RSpec.describe ToyRobot::Robot do
         expect(subject.north).to eq(1)
       end
 
-      describe "turning left" do
+      describe "turning right" do
         it "faces west" do
           subject.turn_left
           expect(subject.facing).to eq("WEST")
+        end
+      end
+
+      describe "turning right" do
+        it "faces east" do
+          subject.turn_right
+          expect(subject.facing).to eq("EAST")
         end
       end
     end
@@ -35,6 +42,13 @@ RSpec.describe ToyRobot::Robot do
           expect(subject.facing).to eq("EAST")
         end
       end
+
+      describe "turning right" do
+        it "faces west" do
+          subject.turn_right
+          expect(subject.facing).to eq("WEST")
+        end
+      end
     end
 
     context "when facing east" do
@@ -50,6 +64,13 @@ RSpec.describe ToyRobot::Robot do
           expect(subject.facing).to eq("NORTH")
         end
       end
+
+      describe "turning right" do
+        it "faces south" do
+          subject.turn_right
+          expect(subject.facing).to eq("SOUTH")
+        end
+      end
     end
 
     context "when facing west" do
@@ -63,6 +84,13 @@ RSpec.describe ToyRobot::Robot do
         it "faces south" do
           subject.turn_left
           expect(subject.facing).to eq("SOUTH")
+        end
+      end
+
+      describe "turning right" do
+        it "faces north" do
+          subject.turn_right
+          expect(subject.facing).to eq("NORTH")
         end
       end
     end
