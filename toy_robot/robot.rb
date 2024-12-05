@@ -2,6 +2,8 @@
 
 module ToyRobot
   class Robot
+    COMPASS = %w[NORTH EAST SOUTH WEST].freeze
+
     attr_reader :east, :facing, :north
 
     def initialize(east: 0, north: 0, facing: "NORTH")
@@ -18,12 +20,7 @@ module ToyRobot
     end
 
     def turn_left
-      @facing = case facing
-      when "NORTH" then "WEST"
-      when "SOUTH" then "EAST"
-      when "EAST" then "NORTH"
-      when "WEST" then "SOUTH"
-      end
+      @facing = COMPASS[COMPASS.index(facing) - 1]
     end
 
     private
