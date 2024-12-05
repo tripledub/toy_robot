@@ -23,6 +23,8 @@ module ToyRobot
      end
     end
 
+    private
+
     def move_east
       @east += 1
     end
