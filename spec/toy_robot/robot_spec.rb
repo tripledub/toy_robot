@@ -27,6 +27,12 @@ RSpec.describe ToyRobot::Robot do
           expect(subject.facing).to eq("EAST")
         end
       end
+
+      describe "report" do
+        it "gives a hash with current location and position" do
+          expect(subject.report).to eq({ east: 0, north: 0, facing: "NORTH" })
+        end
+      end
     end
 
     context "when facing south" do

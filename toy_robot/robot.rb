@@ -29,6 +29,10 @@ module ToyRobot
       end
     end
 
+    def report
+      { east: , north:, facing: }
+    end
+
     private
 
     def move_east
