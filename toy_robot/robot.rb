@@ -17,6 +17,15 @@ module ToyRobot
       "Invalid direction: #{facing}"
     end
 
+    def turn_left
+      @facing = case facing
+      when "NORTH" then "WEST"
+      when "SOUTH" then "EAST"
+      when "EAST" then "NORTH"
+      when "WEST" then "SOUTH"
+      end
+    end
+
     private
 
     def move_east
