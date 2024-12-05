@@ -2,11 +2,25 @@
 
 module ToyRobot
   class Robot
-    attr_reader :east, :north
+    attr_reader :east, :facing, :north
 
-    def initialize(east: 0, north: 0)
+    def initialize(east: 0, north: 0, facing: "NORTH")
       @east = east
+      @facing = facing
       @north = north
+    end
+
+    def move
+     case facing
+     when "EAST"
+       move_east
+     when "NORTH"
+       move_north
+     when "SOUTH"
+       move_south
+     when "WEST"
+       move_west
+     end
     end
 
     def move_east
