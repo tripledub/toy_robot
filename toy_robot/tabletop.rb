@@ -10,7 +10,7 @@ module ToyRobot
     end
 
     def valid_position?(east:, north:)
-      east >= 0 && east < width && north >= 0 && north < height
+      (0...width).cover?(east) && (0...height).cover?(north)
     end
   end
 end
