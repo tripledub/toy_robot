@@ -8,8 +8,12 @@ module ToyRobot
       @coordinates = coordinates
     end
 
-    def move
+    def move_east
       @coordinates += 1
+    end
+
+    def move_west
+      @coordinates -= 1
     end
   end
 end
