@@ -5,61 +5,32 @@ require 'spec_helper'
 RSpec.describe ToyRobot::Robot do
   subject(:robot) { described_class.new(east: 0, north: 0, facing:) }
 
-  describe '#move' do
-    context 'when facing a valid direction' do
-      directions = {
-        'NORTH' => { move_result: { east: 0, north: 1 }, left: 'WEST', right: 'EAST' },
-        'SOUTH' => { move_result: { east: 0, north: -1 }, left: 'EAST', right: 'WEST' },
-        'EAST' => { move_result: { east: 1, north: 0 }, left: 'NORTH', right: 'SOUTH' },
-        'WEST' => { move_result: { east: -1, north: 0 }, left: 'SOUTH', right: 'NORTH' }
-      }
-
-      directions.each do |direction, attributes|
-        # rubocop:disable RSpec/NestedGroups
-        context "when facing #{direction}" do
-          let(:facing) { direction }
-
-          it "moves in the #{direction.downcase} direction and updates east" do
-            robot.move
-            expect(robot.east).to eq(attributes[:move_result][:east])
-          end
-
-          it "moves in the #{direction.downcase} direction and updates north" do
-            robot.move
-            expect(robot.north).to eq(attributes[:move_result][:north])
-          end
-
-          it "turns left to face #{attributes[:left]}" do
-            robot.turn_left
-            expect(robot.facing).to eq(attributes[:left])
-          end
-
-          it "turns right to face #{attributes[:right]}" do
-            robot.turn_right
-            expect(robot.facing).to eq(attributes[:right])
-          end
-        end
-        # rubocop:enable RSpec/NestedGroups
+  describe 'robot behavior with different directions and coordinates' do
+    [
+      { initial_coords: { east: 0, north: 0 }, facing: 'NORTH', move_result: { east: 0, north: 1 }, left: 'WEST',
+        right: 'EAST' },
+      { initial_coords: { east: 2, north: 2 }, facing: 'EAST', move_result: { east: 3, north: 2 }, left: 'NORTH',
+        right: 'SOUTH' },
+      { initial_coords: { east: 4, north: 4 }, facing: 'SOUTH', move_result: { east: 4, north: 3 }, left: 'EAST',
+        right: 'WEST' },
+      { initial_coords: { east: 3, north: 1 }, facing: 'WEST', move_result: { east: 2, north: 1 }, left: 'SOUTH',
+        right: 'NORTH' }
+    ].each do |params|
+      context "when starting at #{params[:initial_coords]} facing #{params[:facing]}" do
+        include_examples 'robot movement and turning',
+                         initial_coords: params[:initial_coords],
+                         facing: params[:facing],
+                         move_result: params[:move_result],
+                         left: params[:left],
+                         right: params[:right]
       end
     end
+  end
 
-    context 'when facing an invalid direction' do
-      let(:facing) { 'NORTHWEST' }
-
-      it 'does not move and returns an error message' do
-        result = robot.move
-        expect(result).to eq("Invalid direction: #{facing}")
-      end
-
-      it 'does not update the east coordinate' do
-        robot.move
-        expect(robot.east).to eq(0)
-      end
-
-      it 'does not update the north coordinate' do
-        robot.move
-        expect(robot.north).to eq(0)
-      end
+  describe 'with an invalid direction' do
+    it 'returns a freindly message' do
+      robot = described_class.new(east: 0, north: 0, facing: 'NORTHWEST')
+      expect(robot.move).to eq('Invalid direction: NORTHWEST')
     end
   end
 

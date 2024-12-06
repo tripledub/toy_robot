@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
-require_relative '../toy_robot'
 require 'simplecov'
-SimpleCov.start
+
+SimpleCov.start do
+  track_files 'toy_robot/**/*.rb'
+  add_filter %r{^/spec/}
+end
+
+require_relative '../toy_robot'
+
+Dir[File.join(__dir__, 'shared_examples/**/*.rb')].each { |file| require file }
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

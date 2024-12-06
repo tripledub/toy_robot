@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe ToyRobot::Tabletop do
-  let(:tabletop) { described_class.new(width: 5, height: 5) }
+  subject(:tabletop) { described_class.new(width: 5, height: 5) }
 
   describe '#initialize' do
     it 'sets the width of the table top to 5' do
