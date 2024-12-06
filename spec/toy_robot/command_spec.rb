@@ -16,4 +16,12 @@ RSpec.describe ToyRobot::Command do
       expect(command).to eq([:invalid, invalid_input])
     end
   end
+
+  context "MOVE" do
+    it "can read in the MOVE command" do
+      command, *args = ToyRobot::Command.parse(command: "MOVE")
+      expect(command).to eq(:move)
+      expect(args).to eq []
+    end
+  end
 end
