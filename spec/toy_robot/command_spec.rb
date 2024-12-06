@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe ToyRobot::Command do
   context "PLACE" do
     it "can read in the PLACE command" do
-      command, *args = ToyRobot::Command.input(command: "PLACE 0,0,NORTH")
+      command, *args = ToyRobot::Command.parse(command: "PLACE 0,0,NORTH")
       expect(command).to eq(:place)
       expect(args).to eq [0, 0, "NORTH"]
     end

@@ -7,8 +7,9 @@ require_relative "toy_robot/tabletop"
 
 module ToyRobot
   class Command
-    def self.input(command:)
-      [:place, 0,0, "NORTH"]
+    def self.parse(command:)
+      result = command.match(/^([A-Z]+)\s+(\d+),(\d+),([A-Z]+)$/).captures
+      [result[0].downcase.to_sym, result[1].to_i, result[2].to_i, result[3]]
     end
   end
 end
