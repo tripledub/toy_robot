@@ -30,7 +30,7 @@ RSpec.describe ToyRobot::Robot do
 
       describe "report" do
         it "gives a hash with current location and position" do
-          expect(subject.report).to eq({ east: 0, north: 0, facing: "NORTH" })
+          expect(subject.report).to eq({east: 0, north: 0, facing: "NORTH"})
         end
       end
     end
