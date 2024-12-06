@@ -31,11 +31,49 @@ RSpec.describe ToyRobot::Dispatcher do
     before do
       allow(ToyRobot::Runner).to receive(:new).and_return(runner)
       allow(runner).to receive(:place)
+      allow(runner).to receive(:move)
+      allow(runner).to receive(:turn_left)
+      allow(runner).to receive(:turn_right)
+      allow(runner).to receive(:report)
+      dispatcher.run(commands:)
     end
 
-    it 'runs commands' do
-      dispatcher.run(commands:)
-      expect(runner).to have_received(:place).with(east: 0, north: 0, facing: 'NORTH')
+    context 'when PLACE' do
+      it 'sends the :place command to the runner' do
+        expect(runner).to have_received(:place).with(east: 0, north: 0, facing: 'NORTH')
+      end
+    end
+
+    context 'when MOVE' do
+      let(:commands) { [:move] }
+
+      it 'sends the :move command to the runner' do
+        expect(runner).to have_received(:move)
+      end
+    end
+
+    context 'when LEFT' do
+      let(:commands) { [:turn_left] }
+
+      it 'sends the :move command to the runner' do
+        expect(runner).to have_received(:turn_left)
+      end
+    end
+
+    context 'when RIGHT' do
+      let(:commands) { [:turn_right] }
+
+      it 'sends the :turn_right command to the runner' do
+        expect(runner).to have_received(:turn_right)
+      end
+    end
+
+    context 'when REPORT' do
+      let(:commands) { [:report] }
+
+      it 'sends the :report command to the runner' do
+        expect(runner).to have_received(:report)
+      end
     end
   end
 end

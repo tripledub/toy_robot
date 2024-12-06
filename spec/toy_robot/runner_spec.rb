@@ -39,4 +39,43 @@ RSpec.describe ToyRobot::Runner do
       end
     end
   end
+
+  describe 'robot actions' do
+    before do
+      allow(robot_instance).to receive(:move)
+      allow(robot_instance).to receive(:turn_left)
+      allow(robot_instance).to receive(:turn_right)
+      allow(robot_instance).to receive(:report).and_return('0,0,NORTH')
+
+      runner.place(east: 0, north: 0, facing: 'NORTH')
+    end
+
+    describe '#move' do
+      it 'delegates the move action to the robot' do
+        runner.move
+        expect(robot_instance).to have_received(:move)
+      end
+    end
+
+    describe '#turn_left' do
+      it 'delegates the turn_left action to the robot' do
+        runner.turn_left
+        expect(robot_instance).to have_received(:turn_left)
+      end
+    end
+
+    describe '#turn_right' do
+      it 'delegates the turn_right action to the robot' do
+        runner.turn_right
+        expect(robot_instance).to have_received(:turn_right)
+      end
+    end
+
+    describe '#report' do
+      it 'delegates the report action to the robot and returns the result' do
+        runner.report
+        expect(robot_instance).to have_received(:report)
+      end
+    end
+  end
 end
