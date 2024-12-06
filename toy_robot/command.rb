@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ToyRobot
-  class Command
+  module Command
     def self.parse(command:)
       case command
       when /^PLACE\s+(\d+),(\d+),([A-Z]+)$/
