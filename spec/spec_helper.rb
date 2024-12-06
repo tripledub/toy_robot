@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative '../toy_robot'
+require 'simplecov'
+SimpleCov.start
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

@@ -1,6 +1,6 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-ruby "3.3.3"
+ruby '3.3.3'
 
-gem "rspec", "~> 3.13"
-gem "standard", "~> 1.4"
+gem 'rspec', '~> 3.13'
+gem 'simplecov', require: false, group: :test
