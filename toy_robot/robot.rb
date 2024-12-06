@@ -19,14 +19,12 @@ module ToyRobot
       "Invalid direction: #{facing}"
     end
 
-    def method_missing(method_name, *args, &block)
-      if method_name.to_s.match?(/^turn_(left|right)$/)
-        direction = method_name.to_s.split("_").last.to_sym
-        step = direction == :left ? -1 : 1
-        @facing = COMPASS.rotate(step)[COMPASS.index(@facing)]
-      else
-        super
-      end
+    def turn_left
+      turn(direction: :left)
+    end
+
+    def turn_right
+      turn(direction: :right)
     end
 
     def report
@@ -49,6 +47,11 @@ module ToyRobot
 
     def move_west
       @east -= 1
+    end
+
+    def turn(direction:)
+      step = (direction == :left) ? -1 : 1
+      @facing = COMPASS.rotate(step)[COMPASS.index(@facing)]
     end
   end
 end
