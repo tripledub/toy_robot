@@ -11,7 +11,9 @@ RSpec.describe ToyRobot::Command do
     end
 
     it "returns :invalid if the PLACE command is invalid" do
-      command = ToyRobot::Command.parse(command: "PLaCe 0, 0,  NORTH")
+      invalid_input = "PLaCe 0, 0,  NORTH"
+      command = ToyRobot::Command.parse(command: invalid_input)
+      expect(command).to eq([:invalid, invalid_input])
     end
   end
 end
