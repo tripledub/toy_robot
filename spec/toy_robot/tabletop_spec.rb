@@ -1,32 +1,47 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 RSpec.describe ToyRobot::Tabletop do
-  let(:tabletop) { ToyRobot::Tabletop.new(width: 5, height: 5) }
+  let(:tabletop) { described_class.new(width: 5, height: 5) }
 
-  describe "#initialize" do
-    it "creates a new instance of Tabletop" do
-      expect(tabletop).to be_an_instance_of ToyRobot::Tabletop
+  describe '#initialize' do
+    it 'sets the width of the table top to 5' do
+      expect(tabletop.width).to eq 5
     end
 
-    it "sets the width and height of the tabletop" do
-      expect(tabletop.width).to eq 5
+    it 'sets the height of the tabletop to 5' do
       expect(tabletop.height).to eq 5
     end
   end
 
-  describe "#valid_position?" do
-    it "returns true if the position is valid" do
-      expect(tabletop.valid_position?(east: 0, north: 0)).to eq true
-      expect(tabletop.valid_position?(east: 4, north: 4)).to eq true
+  describe '#valid_position?' do
+    let(:valid_positions) do
+      [
+        { east: 0, north: 0 },
+        { east: 4, north: 4 }
+      ]
     end
 
-    it "returns false if the position is invalid" do
-      expect(tabletop.valid_position?(east: -1, north: 0)).to eq false
-      expect(tabletop.valid_position?(east: -10, north: -1)).to eq false
-      expect(tabletop.valid_position?(east: -15, north: 0)).to eq false
-      expect(tabletop.valid_position?(east: -10, north: 5)).to eq false
+    let(:invalid_positions) do
+      [
+        { east: -1, north: 0 },
+        { east: 5, north: 0 },
+        { east: 0, north: -1 },
+        { east: 0, north: 5 }
+      ]
+    end
+
+    it 'returns true if the position is valid' do
+      valid_positions.each do |position|
+        expect(tabletop.valid_position?(east: position[:east], north: position[:north])).to be(true)
+      end
+    end
+
+    it 'returns false if the position is invalid' do
+      invalid_positions.each do |position|
+        expect(tabletop.valid_position?(east: position[:east], north: position[:north])).to be(false)
+      end
     end
   end
 end

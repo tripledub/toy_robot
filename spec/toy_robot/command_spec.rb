@@ -1,51 +1,81 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 RSpec.describe ToyRobot::Command do
-  context "PLACE" do
-    it "can read in the PLACE command" do
-      command, *args = ToyRobot::Command.parse(command: "PLACE 0,0,NORTH")
+  context 'when PLACE' do
+    it 'can extract in the PLACE command' do
+      command, = described_class.parse(command: 'PLACE 0,0,NORTH')
       expect(command).to eq(:place)
-      expect(args).to eq [0, 0, "NORTH"]
     end
 
-    it "returns :invalid if the PLACE command is invalid" do
-      invalid_input = "PLaCe 0, 0,  NORTH"
-      command = ToyRobot::Command.parse(command: invalid_input)
-      expect(command).to eq([:invalid, invalid_input])
+    it 'can extract the other *args from the PLACE command' do
+      _, *args = described_class.parse(command: 'PLACE 0,0,NORTH')
+      expect(args).to eq [0, 0, 'NORTH']
     end
   end
 
-  context "MOVE" do
-    it "can read in the MOVE command" do
-      command, *args = ToyRobot::Command.parse(command: "MOVE")
-      expect(command).to eq(:move)
-      expect(args).to be_empty
+  describe 'simple commands' do
+    context 'when MOVE' do
+      it 'can read in the MOVE command' do
+        command, = described_class.parse(command: 'MOVE')
+        expect(command).to eq(:move)
+      end
+
+      it 'has no *args' do
+        _, *args = described_class.parse(command: 'MOVE')
+        expect(args).to be_empty
+      end
+    end
+
+    context 'when LEFT' do
+      it 'can read in the LEFT command' do
+        command, = described_class.parse(command: 'LEFT')
+        expect(command).to eq(:turn_left)
+      end
+
+      it 'has no *args' do
+        _, *args = described_class.parse(command: 'LEFT')
+        expect(args).to be_empty
+      end
+    end
+
+    context 'when RIGHT' do
+      it 'can read in the RIGHT command' do
+        command, = described_class.parse(command: 'RIGHT')
+        expect(command).to eq(:turn_right)
+      end
+
+      it 'has no *args' do
+        _, *args = described_class.parse(command: 'RIGHT')
+        expect(args).to be_empty
+      end
+    end
+
+    context 'when REPORT' do
+      it 'can read in the REPORT command' do
+        command, = described_class.parse(command: 'REPORT')
+        expect(command).to eq(:report)
+      end
+
+      it 'has no *args' do
+        _, *args = described_class.parse(command: 'REPORT')
+        expect(args).to be_empty
+      end
     end
   end
 
-  context "LEFT" do
-    it "can read in the LEFT command" do
-      command, *args = ToyRobot::Command.parse(command: "LEFT")
-      expect(command).to eq(:turn_left)
-      expect(args).to be_empty
-    end
-  end
+  context 'when invalid' do
+    let(:input) { 'OOPS, 1,1, NORTHWARD' }
 
-  context "RIGHT" do
-    it "can read in the RIGHT command" do
-      command, *args = ToyRobot::Command.parse(command: "RIGHT")
-      expect(command).to eq(:turn_right)
-      expect(args).to be_empty
+    it 'can read in the invalid command' do
+      command, = described_class.parse(command: input)
+      expect(command).to eq(:invalid)
     end
-  end
 
-  context "REPORT" do
-    it "can read in the REPORT command" do
-      command, *args = ToyRobot::Command.parse(command: "REPORT")
-      expect(command).to eq(:report)
-      expect(args).to be_empty
+    it 'can extract the invalid command' do
+      _, *args = described_class.parse(command: input)
+      expect(args).to eq [input]
     end
   end
 end

@@ -1,114 +1,73 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 RSpec.describe ToyRobot::Robot do
-  describe "moving in direction robot facing" do
-    let(:facing) { "NORTH" }
+  subject(:robot) { described_class.new(east: 0, north: 0, facing:) }
 
-    subject { ToyRobot::Robot.new(east: 0, north: 0, facing:) }
+  describe '#move' do
+    context 'when facing a valid direction' do
+      directions = {
+        'NORTH' => { move_result: { east: 0, north: 1 }, left: 'WEST', right: 'EAST' },
+        'SOUTH' => { move_result: { east: 0, north: -1 }, left: 'EAST', right: 'WEST' },
+        'EAST' => { move_result: { east: 1, north: 0 }, left: 'NORTH', right: 'SOUTH' },
+        'WEST' => { move_result: { east: -1, north: 0 }, left: 'SOUTH', right: 'NORTH' }
+      }
 
-    context "when facing north" do
-      it "moves north" do
-        subject.move
-        expect(subject.north).to eq(1)
-      end
+      directions.each do |direction, attributes|
+        # rubocop:disable RSpec/NestedGroups
+        context "when facing #{direction}" do
+          let(:facing) { direction }
 
-      describe "turning right" do
-        it "faces west" do
-          subject.turn_left
-          expect(subject.facing).to eq("WEST")
+          it "moves in the #{direction.downcase} direction and updates east" do
+            robot.move
+            expect(robot.east).to eq(attributes[:move_result][:east])
+          end
+
+          it "moves in the #{direction.downcase} direction and updates north" do
+            robot.move
+            expect(robot.north).to eq(attributes[:move_result][:north])
+          end
+
+          it "turns left to face #{attributes[:left]}" do
+            robot.turn_left
+            expect(robot.facing).to eq(attributes[:left])
+          end
+
+          it "turns right to face #{attributes[:right]}" do
+            robot.turn_right
+            expect(robot.facing).to eq(attributes[:right])
+          end
         end
-      end
-
-      describe "turning right" do
-        it "faces east" do
-          subject.turn_right
-          expect(subject.facing).to eq("EAST")
-        end
-      end
-
-      describe "report" do
-        it "gives a hash with current location and position" do
-          expect(subject.report).to eq({east: 0, north: 0, facing: "NORTH"})
-        end
+        # rubocop:enable RSpec/NestedGroups
       end
     end
 
-    context "when facing south" do
-      let(:facing) { "SOUTH" }
-      it "moves south" do
-        subject.move
-        expect(subject.north).to eq(-1)
+    context 'when facing an invalid direction' do
+      let(:facing) { 'NORTHWEST' }
+
+      it 'does not move and returns an error message' do
+        result = robot.move
+        expect(result).to eq("Invalid direction: #{facing}")
       end
 
-      describe "turning left" do
-        it "faces east" do
-          subject.turn_left
-          expect(subject.facing).to eq("EAST")
-        end
+      it 'does not update the east coordinate' do
+        robot.move
+        expect(robot.east).to eq(0)
       end
 
-      describe "turning right" do
-        it "faces west" do
-          subject.turn_right
-          expect(subject.facing).to eq("WEST")
-        end
+      it 'does not update the north coordinate' do
+        robot.move
+        expect(robot.north).to eq(0)
       end
     end
+  end
 
-    context "when facing east" do
-      let(:facing) { "EAST" }
-      it "moves east" do
-        subject.move
-        expect(subject.east).to eq(1)
-      end
+  describe '#report' do
+    let(:facing) { 'NORTH' }
 
-      describe "turning left" do
-        it "faces north" do
-          subject.turn_left
-          expect(subject.facing).to eq("NORTH")
-        end
-      end
-
-      describe "turning right" do
-        it "faces south" do
-          subject.turn_right
-          expect(subject.facing).to eq("SOUTH")
-        end
-      end
-    end
-
-    context "when facing west" do
-      let(:facing) { "WEST" }
-      it "moves west" do
-        subject.move
-        expect(subject.east).to eq(-1)
-      end
-
-      describe "turning left" do
-        it "faces south" do
-          subject.turn_left
-          expect(subject.facing).to eq("SOUTH")
-        end
-      end
-
-      describe "turning right" do
-        it "faces north" do
-          subject.turn_right
-          expect(subject.facing).to eq("NORTH")
-        end
-      end
-    end
-
-    context "when facing an invalid direction" do
-      let(:facing) { "INVALID" }
-      it "does not move and returns an error message" do
-        result = subject.move
-        expect(result).to eq("Invalid direction: INVALID")
-        expect(subject.north).to eq(0)
-        expect(subject.east).to eq(0)
-      end
+    it 'gives a hash with the current location and position' do
+      expect(robot.report).to eq({ east: 0, north: 0, facing: 'NORTH' })
     end
   end
 end
