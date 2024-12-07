@@ -1,9 +1,35 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require_relative 'toy_robot'
 
-dispatcher = ToyRobot::Dispatcher.new
+def run_file_mode(file_path)
+  dispatcher = ToyRobot::Dispatcher.new
+  commands = dispatcher.read_commands_from_file(file_path: file_path)
+  dispatcher.run(commands: commands)
+end
 
-commands = dispatcher.read_commands_from_file(file_path: ARGV[0])
+# rubocop:disable Metrics/MethodLength
+def run_repl_mode
+  dispatcher = ToyRobot::Dispatcher.new
+  puts "ToyRobot REPL started. Type commands or 'EXIT' to quit."
+  loop do
+    print '> '
+    input = gets.chomp
+    break if input.upcase == 'EXIT'
 
-dispatcher.run(commands: commands) if $PROGRAM_NAME == __FILE__
+    command = dispatcher.parser.parse(command: input)
+    if command.first == :invalid
+      puts "Invalid command: #{command.last}"
+    else
+      dispatcher.run(commands: [command])
+    end
+  end
+end
+# rubocop:enable Metrics/MethodLength
+
+if ARGV.empty?
+  run_repl_mode if $PROGRAM_NAME == __FILE__
+elsif $PROGRAM_NAME == __FILE__
+  run_file_mode(ARGV[0])
+end
