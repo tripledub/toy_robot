@@ -11,8 +11,13 @@ module ToyRobot
     # Initialize the Runner with a tabletop instance.
     #
     # @param tabletop [Tabletop] The tabletop on which the robot operates (default: a new 5x5 tabletop).
-    def initialize(tabletop: Tabletop.new)
+    def initialize(robot: Robot.new, tabletop: Tabletop.new)
+      @robot = robot
       @tabletop = tabletop
+    end
+
+    def robot_in_place?
+      robot.placed?
     end
 
     # Places the robot on the tabletop at the specified position and facing direction.
@@ -33,13 +38,7 @@ module ToyRobot
     def place(east:, north:, facing:)
       return :invalid unless tabletop.valid_position?(east:, north:)
 
-      # IMHO direct instantiation of the Robot class is not a good practice
-      # because it makes the Runner class tightly coupled to the Robot class.
-      # Instead, I would suggest using a factory method or dependency injection
-      # to create the robot instance. This would make the code more flexible
-      # and easier to test. However, for the purposes of meeting the requirements
-      # of the exercise, I will leave the code as is.
-      @robot = Robot.new(east:, north:, facing:)
+      robot.orientation(east: east, north: north, facing: facing)
     end
 
     # Moves the robot one unit forward in the direction it is currently facing.

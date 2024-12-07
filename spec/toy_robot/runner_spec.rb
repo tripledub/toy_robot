@@ -3,39 +3,57 @@
 require 'spec_helper'
 
 RSpec.describe ToyRobot::Runner do
-  subject(:runner) { described_class.new(tabletop:) }
+  subject(:runner) { described_class.new(robot: robot_instance, tabletop: tabletop) }
 
   let(:tabletop) { ToyRobot::Tabletop.new(width: 5, height: 5) }
   let(:robot_instance) { instance_double(ToyRobot::Robot) }
 
   before do
-    allow(ToyRobot::Robot).to receive(:new).and_return(robot_instance)
+    allow(robot_instance).to receive_messages(
+      orientation: nil,
+      move: nil,
+      turn_left: nil,
+      turn_right: nil,
+      report: { east: 0, north: 0, facing: 'NORTH' },
+      next_position: { east: 0, north: 1 },
+      placed?: false
+    )
   end
 
   describe 'placing the robot on the tabletop' do
     context 'with a valid position' do
+      before do
+        allow(tabletop).to receive(:valid_position?).with(east: 0, north: 0).and_return(true)
+      end
+
       it 'is successful' do
         runner.place(east: 0, north: 0, facing: 'NORTH')
-        expect(ToyRobot::Robot).to have_received(:new).with(
+        expect(robot_instance).to have_received(:orientation).with(
           east: 0, north: 0, facing: 'NORTH'
         )
       end
 
-      it 'has a robot' do
+      it 'sets the robot in place' do
+        allow(robot_instance).to receive(:placed?).and_return(true)
+
         runner.place(east: 0, north: 0, facing: 'NORTH')
-        expect(runner.robot).to eq(robot_instance)
+        expect(runner.robot_in_place?).to be true
       end
     end
 
     context 'with an invalid position' do
-      it 'can not be placed' do
-        runner.place(east: -1, north: 0, facing: 'NORTH')
-        expect(ToyRobot::Robot).not_to have_received(:new)
+      before do
+        allow(tabletop).to receive(:valid_position?).with(east: -1, north: 0).and_return(false)
       end
 
-      it 'does not have a robot' do
+      it 'can not be placed' do
         runner.place(east: -1, north: 0, facing: 'NORTH')
-        expect(runner.robot).to be_nil
+        expect(robot_instance).not_to have_received(:orientation)
+      end
+
+      it 'does not set the robot in place' do
+        runner.place(east: -1, north: 0, facing: 'NORTH')
+        expect(runner.robot_in_place?).to be false
       end
     end
   end
@@ -43,6 +61,7 @@ RSpec.describe ToyRobot::Runner do
   describe 'robot actions' do
     before do
       allow(robot_instance).to receive_messages(
+        orientation: nil,
         move: nil,
         turn_left: nil,
         turn_right: nil,
@@ -90,6 +109,7 @@ RSpec.describe ToyRobot::Runner do
     before do
       allow(tabletop).to receive(:valid_position?).and_return(true)
       allow(robot_instance).to receive_messages(
+        orientation: nil,
         move: nil,
         report: orientation,
         next_position: position

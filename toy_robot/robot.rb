@@ -17,10 +17,10 @@ module ToyRobot
 
     # Initialize the Robot with a starting position and direction.
     #
-    # @param east [Integer] The initial position on the east axis (default: 0).
-    # @param north [Integer] The initial position on the north axis (default: 0).
-    # @param facing [String] The initial direction the robot is facing (default: "NORTH").
-    def initialize(east: 0, north: 0, facing: 'NORTH')
+    # @param east [Integer] The initial position on the east axis (default: nil).
+    # @param north [Integer] The initial position on the north axis (default: nil).
+    # @param facing [String] The initial direction the robot is facing (default: nil).
+    def initialize(east: nil, north: nil, facing: nil)
       @east = east
       @facing = facing
       @north = north
@@ -58,6 +58,25 @@ module ToyRobot
       send(method_name)
     rescue NoMethodError
       "Invalid direction: #{facing}"
+    end
+
+    # Sets the robot's orientation (position and facing direction).
+    #
+    # @param east [Integer] The position on the east axis.
+    # @param north [Integer] The position on the north axis.
+    # @param facing [String] The direction the robot is facing.
+    # @return [void]
+    def orientation(east:, north:, facing:)
+      @east = east
+      @north = north
+      @facing = facing
+    end
+
+    # Returns true if the robot has been placed on the tabletop.
+    #
+    # @return [Boolean]
+    def placed?
+      east && north && facing
     end
 
     # Turns the robot 90 degrees to the left.
