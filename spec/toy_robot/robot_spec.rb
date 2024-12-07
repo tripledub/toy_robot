@@ -41,4 +41,38 @@ RSpec.describe ToyRobot::Robot do
       expect(robot.report).to eq({ east: 0, north: 0, facing: 'NORTH' })
     end
   end
+
+  describe '#next_position' do
+    context 'when facing NORTH' do
+      let(:facing) { 'NORTH' }
+
+      it 'returns the next position when moving' do
+        expect(robot.next_position).to eq({ east: 0, north: 1 })
+      end
+    end
+
+    context 'when facing EAST' do
+      let(:facing) { 'EAST' }
+
+      it 'returns the next position when moving' do
+        expect(robot.next_position).to eq({ east: 1, north: 0 })
+      end
+    end
+
+    context 'when facing SOUTH' do
+      let(:facing) { 'SOUTH' }
+
+      it 'returns the next position when moving' do
+        expect(robot.next_position).to eq({ east: 0, north: -1 })
+      end
+    end
+
+    context 'when facing WEST' do
+      let(:facing) { 'WEST' }
+
+      it 'returns the next position when moving' do
+        expect(robot.next_position).to eq({ east: -1, north: 0 })
+      end
+    end
+  end
 end

@@ -6,7 +6,7 @@ module ToyRobot
   class Runner
     # Attributes
     # @robot [Robot, nil] The current robot instance, if one is placed on the tabletop.
-    attr_reader :robot
+    attr_reader :robot, :tabletop
 
     # Initialize the Runner with a tabletop instance.
     #
@@ -31,7 +31,7 @@ module ToyRobot
     #   runner.place(east: -1, north: 0, facing: "NORTH")
     #   # => :invalid_position
     def place(east:, north:, facing:)
-      return :invalid unless @tabletop.valid_position?(east:, north:)
+      return :invalid unless tabletop.valid_position?(east:, north:)
 
       # IMHO direct instantiation of the Robot class is not a good practice
       # because it makes the Runner class tightly coupled to the Robot class.
@@ -48,6 +48,8 @@ module ToyRobot
     #
     # @return [void]
     def move
+      return unless tabletop.valid_position?(**robot.next_position)
+
       robot.move
     end
 

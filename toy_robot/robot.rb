@@ -26,6 +26,25 @@ module ToyRobot
       @north = north
     end
 
+    # Calculates the next position the robot will move to based on its current position and direction.
+    #
+    # @return [Hash] A hash with the keys :east and :north.
+    # @example
+    #   robot.next_position
+    #   # => {east: 0, north: 1}
+    def next_position
+      case facing
+      when 'NORTH'
+        { east: east, north: north + 1 }
+      when 'EAST'
+        { east: east + 1, north: north }
+      when 'SOUTH'
+        { east: east, north: north - 1 }
+      when 'WEST'
+        { east: east - 1, north: north }
+      end
+    end
+
     # Moves the robot one step forward in the current direction.
     # The specific movement is determined by the current facing direction.
     #

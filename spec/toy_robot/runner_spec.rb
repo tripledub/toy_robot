@@ -42,10 +42,13 @@ RSpec.describe ToyRobot::Runner do
 
   describe 'robot actions' do
     before do
-      allow(robot_instance).to receive(:move)
-      allow(robot_instance).to receive(:turn_left)
-      allow(robot_instance).to receive(:turn_right)
-      allow(robot_instance).to receive(:report).and_return({ east: 0, north: 0, facing: 'NORTH' })
+      allow(robot_instance).to receive_messages(
+        move: nil,
+        turn_left: nil,
+        turn_right: nil,
+        report: { east: 0, north: 0, facing: 'NORTH' },
+        next_position: { east: 0, north: 1 }
+      )
 
       runner.place(east: 0, north: 0, facing: 'NORTH')
     end
@@ -79,6 +82,91 @@ RSpec.describe ToyRobot::Runner do
 
       it 'returns the robot position and facing direction in a readable form' do
         expect { runner.report }.to output("Robot is at (0, 0) facing NORTH\n").to_stdout
+      end
+    end
+  end
+
+  describe 'boundary constraints' do
+    before do
+      allow(tabletop).to receive(:valid_position?).and_return(true)
+      allow(robot_instance).to receive_messages(
+        move: nil,
+        report: orientation,
+        next_position: position
+      )
+
+      allow(tabletop).to receive(:valid_position?).and_return(true)
+      allow(tabletop).to receive(:valid_position?).with(position).and_return(false)
+
+      runner.place(**orientation)
+      runner.move
+    end
+
+    context 'when at northern most limit' do
+      let(:orientation) { { east: 0, north: 4, facing: 'NORTH' } }
+      let(:position) { { east: 0, north: 5 } }
+
+      it 'can not move north' do
+        expect(robot_instance).not_to have_received(:move)
+      end
+
+      it 'reports the original position' do
+        expect do
+          runner.report
+        end.to output(
+          "Robot is at (#{orientation[:east]}, #{orientation[:north]}) facing #{orientation[:facing]}\n"
+        ).to_stdout
+      end
+    end
+
+    context 'when at eastern most limit' do
+      let(:orientation) { { east: 4, north: 0, facing: 'EAST' } }
+      let(:position) { { east: 5, north: 0 } }
+
+      it 'can not move east' do
+        expect(robot_instance).not_to have_received(:move)
+      end
+
+      it 'reports the original position' do
+        expect do
+          runner.report
+        end.to output(
+          "Robot is at (#{orientation[:east]}, #{orientation[:north]}) facing #{orientation[:facing]}\n"
+        ).to_stdout
+      end
+    end
+
+    context 'when at southern most limit' do
+      let(:orientation) { { east: 0, north: 0, facing: 'SOUTH' } }
+      let(:position) { { east: 0, north: -1 } }
+
+      it 'can not move south' do
+        expect(robot_instance).not_to have_received(:move)
+      end
+
+      it 'reports the original position' do
+        expect do
+          runner.report
+        end.to output(
+          "Robot is at (#{orientation[:east]}, #{orientation[:north]}) facing #{orientation[:facing]}\n"
+        ).to_stdout
+      end
+    end
+
+    context 'when at western most limit' do
+      let(:orientation) { { east: 0, north: 2, facing: 'WEST' } }
+      let(:position) { { east: -1, north: 0 } }
+
+      it 'can not move west' do
+        expect(robot_instance).not_to have_received(:move)
+      end
+
+      it 'reports the original position' do
+        expect do
+          runner.report
+        end.to output(
+          "Robot is at (#{orientation[:east]}, #{orientation[:north]}) facing #{orientation[:facing]}\n"
+        ).to_stdout
       end
     end
   end
