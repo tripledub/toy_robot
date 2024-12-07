@@ -45,6 +45,8 @@ module ToyRobot
         case command
         when :place
           runner.place(east: args[0], north: args[1], facing: args[2])
+        when :invalid
+          puts "Invalid command: #{args[0]}"
         else
           runner.public_send(command, *args)
         end

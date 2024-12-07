@@ -4,6 +4,6 @@ require_relative 'toy_robot'
 
 dispatcher = ToyRobot::Dispatcher.new
 
-commands = dispatcher.read_commands_from_file(ARGV[0])
+commands = dispatcher.read_commands_from_file(file_path: ARGV[0])
 
-dispatcher.execute_commands(commands) if $PROGRAM_NAME == __FILE__
+dispatcher.run(commands: commands) if $PROGRAM_NAME == __FILE__
