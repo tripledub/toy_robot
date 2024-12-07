@@ -42,20 +42,44 @@ module ToyRobot
       @robot = Robot.new(east:, north:, facing:)
     end
 
+    # Moves the robot one unit forward in the direction it is currently facing.
+    #
+    # The robot must be placed on the tabletop before it can move.
+    #
+    # @return [void]
     def move
       robot.move
     end
 
+    # Turns the robot 90 degrees to the left.
+    #
+    # The robot must be placed on the tabletop before it can turn.
     def turn_left
       robot.turn_left
     end
 
+    # Turns the robot 90 degrees to the right.
+    #
+    # The robot must be placed on the tabletop before it can turn.
     def turn_right
       robot.turn_right
     end
 
+    # Outputs the robot's current position and facing direction to STDOUT.
+    #
+    # The robot must be placed on the tabletop before it can report.
+    # If the robot is not placed, this method will raise an error or fail silently
+    # depending on the implementation of the `robot.report` method.
+    #
+    # @return [void] This method does not return a value; it only outputs to STDOUT.
+    # @example
+    #   # When the robot is at position (0, 0) facing NORTH:
+    #   runner.report
+    #   # Output to STDOUT:
+    #   # => "Robot is at (0, 0) facing NORTH"
     def report
-      robot.report
+      orientation = robot.report
+      puts "Robot is at (#{orientation[:east]}, #{orientation[:north]}) facing #{orientation[:facing]}"
     end
   end
 end

@@ -45,7 +45,7 @@ RSpec.describe ToyRobot::Runner do
       allow(robot_instance).to receive(:move)
       allow(robot_instance).to receive(:turn_left)
       allow(robot_instance).to receive(:turn_right)
-      allow(robot_instance).to receive(:report).and_return('0,0,NORTH')
+      allow(robot_instance).to receive(:report).and_return({ east: 0, north: 0, facing: 'NORTH' })
 
       runner.place(east: 0, north: 0, facing: 'NORTH')
     end
@@ -75,6 +75,10 @@ RSpec.describe ToyRobot::Runner do
       it 'delegates the report action to the robot and returns the result' do
         runner.report
         expect(robot_instance).to have_received(:report)
+      end
+
+      it 'returns the robot position and facing direction in a readable form' do
+        expect { runner.report }.to output("Robot is at (0, 0) facing NORTH\n").to_stdout
       end
     end
   end
