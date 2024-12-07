@@ -66,30 +66,49 @@ RSpec.describe ToyRobot::Runner do
         turn_left: nil,
         turn_right: nil,
         report: { east: 0, north: 0, facing: 'NORTH' },
-        next_position: { east: 0, north: 1 }
+        next_position: { east: 0, north: 1 },
+        placed?: true
       )
 
       runner.place(east: 0, north: 0, facing: 'NORTH')
     end
 
     describe '#move' do
-      it 'delegates the move action to the robot' do
+      it 'delegates the move action to the robot when robot is placed' do
         runner.move
         expect(robot_instance).to have_received(:move)
+      end
+
+      it 'does not move the robot when it is not placed' do
+        allow(robot_instance).to receive(:placed?).and_return(false)
+        runner.move
+        expect(robot_instance).not_to have_received(:move)
       end
     end
 
     describe '#turn_left' do
-      it 'delegates the turn_left action to the robot' do
+      it 'delegates the turn_left action to the robot when the robot is placed' do
         runner.turn_left
         expect(robot_instance).to have_received(:turn_left)
+      end
+
+      it 'does not turn the robot when it is not placed' do
+        allow(robot_instance).to receive(:placed?).and_return(false)
+        runner.turn_left
+        expect(robot_instance).not_to have_received(:turn_left)
       end
     end
 
     describe '#turn_right' do
-      it 'delegates the turn_right action to the robot' do
+      it 'delegates the turn_right action to the robot when the robot is placed' do
         runner.turn_right
         expect(robot_instance).to have_received(:turn_right)
+      end
+
+      it 'does not turn the robot when it is not placed' do
+        allow(robot_instance).to receive(:placed?).and_return(false)
+        runner.turn_right
+        expect(robot_instance).not_to have_received(:turn_right)
       end
     end
 
@@ -102,6 +121,12 @@ RSpec.describe ToyRobot::Runner do
       it 'returns the robot position and facing direction in a readable form' do
         expect { runner.report }.to output("Robot is at (0, 0) facing NORTH\n").to_stdout
       end
+
+      it 'does not report the robot when it is not placed' do
+        allow(robot_instance).to receive(:placed?).and_return(false)
+        runner.report
+        expect(robot_instance).not_to have_received(:report)
+      end
     end
   end
 
@@ -112,7 +137,8 @@ RSpec.describe ToyRobot::Runner do
         orientation: nil,
         move: nil,
         report: orientation,
-        next_position: position
+        next_position: position,
+        placed?: true
       )
 
       allow(tabletop).to receive(:valid_position?).and_return(true)

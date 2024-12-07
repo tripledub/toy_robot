@@ -17,7 +17,7 @@ module ToyRobot
     end
 
     def robot_in_place?
-      robot.placed?
+      robot&.placed?
     end
 
     # Places the robot on the tabletop at the specified position and facing direction.
@@ -47,7 +47,7 @@ module ToyRobot
     #
     # @return [void]
     def move
-      return unless tabletop.valid_position?(**robot.next_position)
+      return unless robot_in_place? && tabletop.valid_position?(**robot.next_position)
 
       robot.move
     end
@@ -56,6 +56,8 @@ module ToyRobot
     #
     # The robot must be placed on the tabletop before it can turn.
     def turn_left
+      return unless robot_in_place?
+
       robot.turn_left
     end
 
@@ -63,6 +65,8 @@ module ToyRobot
     #
     # The robot must be placed on the tabletop before it can turn.
     def turn_right
+      return unless robot_in_place?
+
       robot.turn_right
     end
 
@@ -79,6 +83,8 @@ module ToyRobot
     #   # Output to STDOUT:
     #   # => "Robot is at (0, 0) facing NORTH"
     def report
+      return unless robot_in_place?
+
       orientation = robot.report
       puts "Robot is at (#{orientation[:east]}, #{orientation[:north]}) facing #{orientation[:facing]}"
     end
