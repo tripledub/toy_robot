@@ -75,4 +75,37 @@ RSpec.describe ToyRobot::Robot do
       end
     end
   end
+
+  describe '#placed?' do
+    subject(:robot) { described_class.new }
+
+    it 'returns false when the robot is not placed' do
+      expect(robot).not_to be_placed
+    end
+
+    it 'returns true when the robot is placed' do
+      robot.orientation(east: 1, north: 1, facing: 'NORTH')
+      expect(robot).to be_placed
+    end
+  end
+
+  describe '#orientation' do
+    subject(:robot) { described_class.new }
+
+    before do
+      robot.orientation(east: 1, north: 0, facing: 'EAST')
+    end
+
+    it 'updates the east position' do
+      expect(robot.east).to eq(1)
+    end
+
+    it 'updates the north position' do
+      expect(robot.north).to eq(0)
+    end
+
+    it 'updates the facing direction' do
+      expect(robot.facing).to eq('EAST')
+    end
+  end
 end
