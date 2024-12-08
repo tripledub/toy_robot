@@ -7,11 +7,25 @@ SimpleCov.start do
   add_filter %r{^/spec/}
 end
 
+module OutputCapture
+  def capture_output
+    original_stdout = $stdout
+    captured_output = StringIO.new
+    $stdout = captured_output
+    yield
+    captured_output.string
+  ensure
+    $stdout = original_stdout
+  end
+end
+
 require_relative '../toy_robot'
 
 Dir[File.join(__dir__, 'shared_examples/**/*.rb')].each { |file| require file }
 
 RSpec.configure do |config|
+  config.include OutputCapture
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
