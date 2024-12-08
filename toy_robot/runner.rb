@@ -16,6 +16,12 @@ module ToyRobot
       @tabletop = tabletop
     end
 
+    # Checks if the robot is currently placed on the tabletop.
+    #
+    # @return [Boolean] Returns true if the robot is placed, false otherwise.
+    # @example
+    #   runner.robot_in_place?
+    #   # => false
     def robot_in_place?
       robot&.placed?
     end
