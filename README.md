@@ -20,7 +20,7 @@ The simulator can be used in two modes: **File Mode** and **Interactive REPL Mod
 Run commands from a file by specifying the file path:
 
 ```bash
-./toy_robot_simulator.rb --file commands.txt
+./toy_robot_simulator --file commands.txt
 ```
 
 **Command File Format**
@@ -38,7 +38,11 @@ REPORT
 
 Start an interactive session to control the robot manually:
 
+```bash
+./toy_robot_simulator
 ```
+
+```plaintext
 ToyRobot REPL started. Type commands or 'EXIT' to quit.
 > PLACE 0,0,NORTH
 > MOVE
