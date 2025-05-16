@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'toy_robot/cli'
 require_relative 'toy_robot/command'
 require_relative 'toy_robot/dispatcher'
 require_relative 'toy_robot/robot'
