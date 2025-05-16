@@ -28,7 +28,7 @@ module ToyRobot
     # rubocop:disable Metrics/MethodLength
     def self.parse(command:)
       case command
-      when /^PLACE\s+(\d+),(\d+),([A-Z]+)$/
+      when /^PLACE\s*(\d+)\s*,\s*(\d+)\s*,\s*(NORTH|EAST|SOUTH|WEST)$/
         [:place, Regexp.last_match(1).to_i, Regexp.last_match(2).to_i, Regexp.last_match(3)]
       when /^MOVE$/
         [:move]
